@@ -1,1 +1,13 @@
-<app-map [locations]="locations$ | async"></app-map>
+<mat-drawer-container>
+    <mat-drawer [mode]="'side'">
+        <app-location-details [data]="details"></app-location-details>
+    </mat-drawer>
+    
+    <mat-drawer-content>
+        <app-map 
+            [locations]="locations$ | async"
+            (toggleDetails)="onDetailsToggle($event)"
+        ></app-map>
+    </mat-drawer-content>
+</mat-drawer-container>
+

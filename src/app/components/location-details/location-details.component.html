@@ -1,0 +1,19 @@
+<mat-card *ngIf="data">
+    <mat-card-header>
+      <mat-card-title-group>
+        <mat-card-title>{{ data.name }}</mat-card-title>
+        <mat-card-subtitle>
+            <section *ngIf="data.coordinates.length >= 2" class="coordinates">
+                <span>Latitude: {{ data.coordinates[0] }}</span>
+                <span>Longitude: {{ data.coordinates[1] }}</span>
+            </section>
+        </mat-card-subtitle>
+        <img mat-card-lg-image src="./assets/img/mountains.jpeg" >
+      </mat-card-title-group>
+    </mat-card-header>
+    <mat-card-content>
+        <section>
+            Lorem ipsum dolor sit amet consectetur adipisicing elit. Laudantium molestiae labore, inventore iusto fuga soluta asperiores! Quos mollitia eligendi, adipisci ratione temporibus debitis a iure eos et dolor nulla? Quas!
+        </section>
+    </mat-card-content>
+</mat-card>

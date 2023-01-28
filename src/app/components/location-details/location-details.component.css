@@ -1,0 +1,9 @@
+:host {
+    display: flex;
+    max-width: 20vw;
+}
+
+.coordinates {
+    display: flex;
+    flex-direction: column;
+}

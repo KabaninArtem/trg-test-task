@@ -5,10 +5,10 @@
                 #marker="mapMarker"
                 *ngFor="let location of locations"
                 [position]="location.coordinates | latLng"
-                (mapClick)="showDetails(marker, location.name)"
+                (mapClick)="showDetails(marker, location)"
             ></map-marker>
 
-            <map-info-window>{{ detailsContent }}</map-info-window>
+            <map-info-window (closeclick)="hideDetails()">{{ detailsContent }}</map-info-window>
         </ng-container>
     </google-map>
 </ng-container>

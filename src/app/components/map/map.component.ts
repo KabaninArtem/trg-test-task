@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Input, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output, ViewChild } from '@angular/core';
 import { GoogleMapsModule } from '@angular/google-maps';
 import { Observable, of } from 'rxjs';
 import { CommonModule } from '@angular/common';
@@ -34,6 +34,8 @@ export class MapComponent {
   @Input() center: google.maps.LatLngLiteral = { lat: 32, lng: 32 };
   @Input() zoom: number = 4;
 
+  @Output() toggleDetails: EventEmitter<PointLocation | null> = new EventEmitter();
+
   @ViewChild(MapInfoWindow) infoWindow: MapInfoWindow | undefined;
 
 
@@ -43,10 +45,16 @@ export class MapComponent {
   constructor(private service: MapService) {
   }
 
-  showDetails(marker: MapMarker, details: string): void {
+  showDetails(marker: MapMarker, details: PointLocation): void {
     if (this.infoWindow) {
-      this.detailsContent = details;
+      this.detailsContent = details.name;
       this.infoWindow.open(marker);
+      this.toggleDetails.emit(details);
     }
+  }
+
+  hideDetails() {
+    this.detailsContent = '';
+    this.toggleDetails.emit(null);
   }
 }
