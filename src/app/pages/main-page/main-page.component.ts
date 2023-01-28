@@ -16,7 +16,8 @@ import { LocationDetailsComponent } from 'src/app/components/location-details/lo
     MainPageService
   ],
   imports: [
-    CommonModule, 
+    CommonModule,
+    // BrowserAnimationsModule,
     MatSidenavModule,
     LocationDetailsComponent,
     MapComponent

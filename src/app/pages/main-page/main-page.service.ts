@@ -5,9 +5,7 @@ import { ApiService } from '../../services/api.service';
 
 @Injectable()
 export class MainPageService {
-  locations$: Observable<PointLocation[]> = this.apiService.getMarkers();
+  locations$: Observable<PointLocation[]> = this.apiService.locationsData$;
 
-  
-  constructor(private apiService: ApiService) {
-  }
+  constructor(private apiService: ApiService) {}
 }

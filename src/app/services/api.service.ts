@@ -1,17 +1,28 @@
 import { Injectable } from '@angular/core';
-import { Observable, of } from 'rxjs';
-import locations from '../mocks/locations.json'
+import { Observable } from 'rxjs';
+import locations from '../mocks/locations.json';
 import { PointLocation } from '../models/api.models';
+import { BehaviorSubject } from 'rxjs';
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable()
 export class ApiService {
-  private locationsData: PointLocation[] = locations as PointLocation[];
+  private locationsDataSource: BehaviorSubject<PointLocation[]> =
+    new BehaviorSubject(locations as PointLocation[]);
 
-  constructor() { }
+  locationsData$: Observable<PointLocation[]> =
+    this.locationsDataSource.asObservable();
 
-  getMarkers(): Observable<PointLocation[]> {
-    return of(this.locationsData);
+  constructor() {}
+
+  insertMarker(value: PointLocation): void {
+    this.locationsData = [...this.locationsData, value];
+  }
+
+  private get locationsData(): PointLocation[] {
+    return this.locationsDataSource.value;
+  }
+
+  private set locationsData(value: PointLocation[]) {
+    this.locationsDataSource.next(value);
   }
 }
