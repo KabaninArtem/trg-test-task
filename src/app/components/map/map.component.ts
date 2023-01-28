@@ -1,14 +1,13 @@
-import { ChangeDetectionStrategy, Component, Inject, Input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { GoogleMapsModule } from '@angular/google-maps';
 import { Observable, of } from 'rxjs';
 import { CommonModule } from '@angular/common';
-import { LatLngPipe } from '../pipes/lat-lng.pipe';
-import { PointLocation } from '../models/api.models';
 import { MapService } from './map.service';
 import { HttpClientModule, HttpClientJsonpModule } from '@angular/common/http';
-import { GOOGLE_MAP_API_KEY, GOOGLE_MAP_API_URL } from '../map-configs/map.providers';
-import { MAP_API_KEY, MAP_API_URL } from '../providers/map.providers';
-
+import { MAP_API_KEY, MAP_API_URL } from 'src/app/providers/map.providers';
+import { GOOGLE_MAP_API_KEY, GOOGLE_MAP_API_URL } from 'src/app/configs/map-configs/map.providers';
+import { LatLngPipe } from 'src/app/pipes/lat-lng.pipe';
+import { PointLocation } from 'src/app/models/api.models';
 
 @Component({
   selector: 'app-map',

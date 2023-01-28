@@ -1,9 +1,9 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { Observable } from 'rxjs';
-import { MapComponent } from '../../map/map.component';
 import { PointLocation } from '../../models/api.models';
 import { MainPageService } from './main-page.service';
+import { MapComponent } from 'src/app/components/map/map.component';
 
 @Component({
   selector: 'app-main-page',

@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Inject, Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
-import { MAP_API_KEY, MAP_API_URL } from '../providers/map.providers';
+import { MAP_API_KEY, MAP_API_URL } from 'src/app/providers/map.providers';
 
 @Injectable()
 export class MapService {
