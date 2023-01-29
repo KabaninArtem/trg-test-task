@@ -5,6 +5,10 @@
     <mat-error *ngIf="hasRequiredError('name')">
       Name is <strong>required</strong>
     </mat-error>
+
+    <mat-error *ngIf="hasUniqueError('name')">
+      Name must be <strong>unique</strong>
+    </mat-error>
   </mat-form-field>
 
   <mat-form-field>

@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { Observable, take } from 'rxjs';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { Observable, take, tap } from 'rxjs';
 import { LocationsTableComponent } from 'src/app/components/locations-table/locations-table.component';
 import { PointLocation } from 'src/app/models/api.models';
 import { ApiService } from 'src/app/services/api.service';
@@ -31,7 +31,10 @@ export class DataPageComponent {
 
   openAddLocationDialog(): void {
     const dialogRef = this.dialog.open(LocationDialogComponent, {
-      data: { ...EMPTY_POINT_LOCATION },
+      data: {
+        ...EMPTY_POINT_LOCATION,
+        reservedNames: this.service.locationNames,
+      },
     });
 
     dialogRef
@@ -40,6 +43,24 @@ export class DataPageComponent {
       .subscribe((result) => {
         if (result) {
           this.service.insertMarker(result);
+        }
+      });
+  }
+
+  openEditLocationDialog(value: PointLocation): void {
+    const dialogRef = this.dialog.open(LocationDialogComponent, {
+      data: {
+        ...value,
+        reservedNames: this.service.locationNames,
+      },
+    });
+
+    dialogRef
+      .afterClosed()
+      .pipe(take(1))
+      .subscribe((result) => {
+        if (result) {
+          this.service.updateMarker(value.name, result);
         }
       });
   }

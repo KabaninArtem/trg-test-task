@@ -1,22 +1,27 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { PointLocation } from 'src/app/models/api.models';
-import {
-  MAT_DIALOG_DATA,
-  MatDialogRef,
-  MatDialog,
-  MatDialogModule,
-} from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import {
   AbstractControl,
   FormBuilder,
-  FormControl,
   FormGroup,
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
+import {
+  FormControlErrors,
+  ReservedStringValidator,
+} from 'src/app/validators/global.validators';
+
+export interface LocationDataDialogConfig extends PointLocation {
+  reservedNames: readonly string[];
+}
+
+export type LocationDialogCoordControl = 'lat' | 'lng';
+export type LocationDialogControl = LocationDialogCoordControl | 'name';
 
 @Component({
   selector: 'app-location-dialog',
@@ -31,7 +36,7 @@ export class LocationDialogComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private dialogRef: MatDialogRef<LocationDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: PointLocation
+    @Inject(MAT_DIALOG_DATA) public data: LocationDataDialogConfig
   ) {}
 
   ngOnInit(): void {
@@ -50,18 +55,29 @@ export class LocationDialogComponent implements OnInit {
     }
   }
 
-  hasCoordsError(controlName: 'lat' | 'lng'): boolean {
+  hasCoordsError(controlName: LocationDialogCoordControl): boolean {
     return (
-      this.touched(controlName) && this.hasError(controlName, ['max', 'min'])
+      this.touched(controlName) &&
+      this.hasError(controlName, [FormControlErrors.MAX, FormControlErrors.MIN])
     );
   }
 
-  hasRequiredError(controlName: 'lat' | 'lng' | 'name'): boolean {
-    return this.touched(controlName) && this.hasError(controlName, 'required');
+  hasRequiredError(controlName: LocationDialogControl): boolean {
+    return (
+      this.touched(controlName) &&
+      this.hasError(controlName, FormControlErrors.REQUIRED)
+    );
+  }
+
+  hasUniqueError(controlName: LocationDialogControl): boolean {
+    return (
+      this.touched(controlName) &&
+      this.hasError(controlName, FormControlErrors.UNIQUE)
+    );
   }
 
   private hasError(
-    controlName: 'lat' | 'lng' | 'name',
+    controlName: LocationDialogControl,
     errors: string[] | string
   ): boolean {
     const control = this.control(controlName);
@@ -71,17 +87,27 @@ export class LocationDialogComponent implements OnInit {
     return result.some(Boolean);
   }
 
-  private control(value: 'lat' | 'lng' | 'name'): AbstractControl {
+  private control(value: LocationDialogControl): AbstractControl {
     return this.form.get(value)!;
   }
 
-  private touched(value: 'lat' | 'lng' | 'name'): boolean {
+  private touched(value: LocationDialogControl): boolean {
     return this.control(value).touched;
   }
 
-  private createForm({ name, coordinates: [lat, lng] }: PointLocation): void {
+  private createForm({
+    name,
+    coordinates: [lat, lng],
+    reservedNames,
+  }: LocationDataDialogConfig): void {
+    const names = name
+      ? reservedNames.filter((reserved) => reserved !== name)
+      : reservedNames;
     this.form = this.fb.group({
-      name: [name.trim(), [Validators.required]],
+      name: [
+        name.trim(),
+        [Validators.required, ReservedStringValidator(names)],
+      ],
       lat: [
         lat,
         [Validators.required, Validators.min(-90), Validators.max(90)],
@@ -91,8 +117,6 @@ export class LocationDialogComponent implements OnInit {
         [Validators.required, Validators.min(-180), Validators.max(180)],
       ],
     });
-
-    console.log(this.form);
   }
 
   private get value(): PointLocation {

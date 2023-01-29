@@ -4,6 +4,7 @@ export enum LocationTableColumns {
   NANE = 'name',
   LATITUDE = 'latitude',
   LONGITUDE = 'longitude',
+  ACTIONS = 'actions',
 }
 
 const sorterKeys: Record<string, (value: PointLocation) => string | number> = {

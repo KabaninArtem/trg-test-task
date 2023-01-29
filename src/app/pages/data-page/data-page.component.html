@@ -1,8 +1,14 @@
-<button mat-flat-button color="primary" class="add-btn" (click)="openAddLocationDialog()">
+<button
+  mat-flat-button
+  color="primary"
+  class="add-btn"
+  (click)="openAddLocationDialog()"
+>
   <mat-icon>add</mat-icon>
   <span>Add new location</span>
 </button>
 
 <app-locations-table
   [locations]="(locations$ | async) || []"
+  (editClicked)="openEditLocationDialog($event)"
 ></app-locations-table>
