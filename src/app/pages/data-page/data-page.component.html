@@ -1,1 +1,8 @@
-<p>data-page works!</p>
+<button mat-flat-button color="primary" class="add-btn">
+  <mat-icon>add</mat-icon>
+  <span>Add new location</span>
+</button>
+
+<app-locations-table
+  [locations]="(locations$ | async) || []"
+></app-locations-table>

@@ -12,16 +12,13 @@ import { LocationDetailsComponent } from 'src/app/components/location-details/lo
   templateUrl: './main-page.component.html',
   styleUrls: ['./main-page.component.css'],
   standalone: true,
-  providers: [
-    MainPageService
-  ],
+  providers: [MainPageService],
   imports: [
     CommonModule,
-    // BrowserAnimationsModule,
     MatSidenavModule,
     LocationDetailsComponent,
-    MapComponent
-  ]
+    MapComponent,
+  ],
 })
 export class MainPageComponent {
   @ViewChild(MatDrawer, { static: true }) drawer: MatDrawer | undefined;
@@ -29,13 +26,11 @@ export class MainPageComponent {
   locations$: Observable<PointLocation[]> = this.service.locations$;
   details: PointLocation | null = null;
 
-  
-  constructor(private service: MainPageService) {
-  }
+  constructor(private service: MainPageService) {}
 
   onDetailsToggle(value: PointLocation | null): void {
     this.details = value;
-    
+
     if (value) {
       this.drawer!.open();
     } else {

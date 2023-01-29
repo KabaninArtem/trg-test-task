@@ -1,0 +1,19 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+}
+
+mat-form-field {
+  width: 100%;
+  margin-bottom: -1.25em;
+}
+
+.no-data-text {
+  color: rgba(255, 255, 255, 0.87);
+}
+
+:host ::ng-deep mat-form-field .mat-mdc-text-field-wrapper {
+  border-radius: 0;
+}
