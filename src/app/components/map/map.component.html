@@ -1,14 +1,2 @@
-<ng-container *ngIf="apiLoaded$ | async">
-    <google-map width="100%" height="100%" [center]="center" [zoom]="zoom">
-        <ng-container *ngIf="locations?.length">
-            <map-marker 
-                #marker="mapMarker"
-                *ngFor="let location of locations"
-                [position]="location.coordinates | latLng"
-                (mapClick)="showDetails(marker, location)"
-            ></map-marker>
-
-            <map-info-window (closeclick)="hideDetails()">{{ detailsContent }}</map-info-window>
-        </ng-container>
-    </google-map>
-</ng-container>
+<google-map width="100%" height="100%" [center]="center" [zoom]="zoom">
+</google-map>

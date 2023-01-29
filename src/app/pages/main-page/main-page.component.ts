@@ -1,5 +1,10 @@
 import { CommonModule } from '@angular/common';
-import { Component, ViewChild } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  ViewChild,
+} from '@angular/core';
 import { Observable } from 'rxjs';
 import { PointLocation } from '../../models/api.models';
 import { MainPageService } from './main-page.service';
@@ -12,6 +17,7 @@ import { LocationDetailsComponent } from 'src/app/components/location-details/lo
   templateUrl: './main-page.component.html',
   styleUrls: ['./main-page.component.css'],
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [MainPageService],
   imports: [
     CommonModule,
@@ -21,20 +27,26 @@ import { LocationDetailsComponent } from 'src/app/components/location-details/lo
   ],
 })
 export class MainPageComponent {
-  @ViewChild(MatDrawer, { static: true }) drawer: MatDrawer | undefined;
+  @ViewChild(MatDrawer, { static: true }) drawer: MatDrawer;
 
   locations$: Observable<PointLocation[]> = this.service.locations$;
+  googleApiLoaded$: Observable<boolean> = this.service.googleApiLoaded$;
   details: PointLocation | null = null;
 
-  constructor(private service: MainPageService) {}
+  constructor(
+    private service: MainPageService,
+    private cdr: ChangeDetectorRef
+  ) {}
 
   onDetailsToggle(value: PointLocation | null): void {
     this.details = value;
 
     if (value) {
-      this.drawer!.open();
+      this.drawer.open();
     } else {
-      this.drawer!.close();
+      this.drawer.close();
     }
+
+    this.cdr.detectChanges();
   }
 }

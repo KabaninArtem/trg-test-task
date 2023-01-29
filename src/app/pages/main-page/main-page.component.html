@@ -5,7 +5,8 @@
 
   <mat-drawer-content>
     <app-map
-      [locations]="locations$ | async"
+      *ngIf="googleApiLoaded$ | async"
+      [locations]="(locations$ | async) || []"
       (toggleDetails)="onDetailsToggle($event)"
     ></app-map>
   </mat-drawer-content>

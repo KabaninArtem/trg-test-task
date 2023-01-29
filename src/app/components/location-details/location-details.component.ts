@@ -10,12 +10,8 @@ import { MatListModule } from '@angular/material/list';
   styleUrls: ['./location-details.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
-  imports: [
-    CommonModule,
-    MatListModule,
-    MatCardModule
-  ]
+  imports: [CommonModule, MatListModule, MatCardModule],
 })
 export class LocationDetailsComponent {
-  @Input() data: PointLocation | null = null;
+  @Input() data: PointLocation | null;
 }

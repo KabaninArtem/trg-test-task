@@ -1,14 +1,17 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output, ViewChild } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  EventEmitter,
+  Input,
+  Output,
+  ViewChild,
+} from '@angular/core';
 import { GoogleMapsModule } from '@angular/google-maps';
-import { Observable, of } from 'rxjs';
 import { CommonModule } from '@angular/common';
-import { MapService } from './map.service';
-import { HttpClientModule, HttpClientJsonpModule } from '@angular/common/http';
-import { MAP_API_KEY, MAP_API_URL } from 'src/app/providers/map.providers';
-import { GOOGLE_MAP_API_KEY, GOOGLE_MAP_API_URL } from 'src/app/configs/map-configs/map.providers';
 import { LatLngPipe } from 'src/app/pipes/lat-lng.pipe';
-import { MapInfoWindow, MapMarker } from '@angular/google-maps';
+import { GoogleMap } from '@angular/google-maps';
 import { PointLocation } from 'src/app/models/api.models';
+import { MarkerClusterer } from '@googlemaps/markerclusterer';
 
 @Component({
   selector: 'app-map',
@@ -16,45 +19,65 @@ import { PointLocation } from 'src/app/models/api.models';
   styleUrls: ['./map.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
-  providers: [
-    MapService,
-    { provide: MAP_API_URL, useValue: GOOGLE_MAP_API_URL },
-    { provide: MAP_API_KEY, useValue: GOOGLE_MAP_API_KEY },
-  ],
-  imports: [
-    CommonModule, 
-    GoogleMapsModule,
-    HttpClientModule,
-    HttpClientJsonpModule,
-    LatLngPipe
-  ]
+  imports: [CommonModule, GoogleMapsModule, LatLngPipe],
 })
 export class MapComponent {
-  @Input() locations: PointLocation[] | null = [];
+  @Input() locations: PointLocation[] = [];
   @Input() center: google.maps.LatLngLiteral = { lat: 32, lng: 32 };
   @Input() zoom: number = 4;
 
-  @Output() toggleDetails: EventEmitter<PointLocation | null> = new EventEmitter();
+  @Output() toggleDetails: EventEmitter<PointLocation | null> =
+    new EventEmitter();
 
-  @ViewChild(MapInfoWindow) infoWindow: MapInfoWindow | undefined;
+  @ViewChild(GoogleMap) map: GoogleMap;
 
+  infoWindow = new google.maps.InfoWindow();
+  markerCluster: MarkerClusterer;
 
-  apiLoaded$: Observable<boolean> = this.service.load();
-  detailsContent: string = '';
-
-  constructor(private service: MapService) {
+  ngAfterViewInit(): void {
+    this.createMarkerCluster();
+    this.addInfoWindowCloseListener();
   }
 
-  showDetails(marker: MapMarker, details: PointLocation): void {
-    if (this.infoWindow) {
-      this.detailsContent = details.name;
-      this.infoWindow.open(marker);
-      this.toggleDetails.emit(details);
-    }
+  private openInfo(marker: google.maps.Marker, info: PointLocation): void {
+    this.closeInfo();
+
+    this.infoWindow.setContent(
+      `<span class="map-info-window"><strong>${info.name}</strong></span>`
+    );
+    this.infoWindow.open(this.map.googleMap, marker);
+    this.toggleDetails.emit(info);
   }
 
-  hideDetails() {
-    this.detailsContent = '';
+  closeInfo(): void {
+    this.infoWindow.close();
     this.toggleDetails.emit(null);
+  }
+
+  private createMarkerCluster(): void {
+    this.markerCluster = new MarkerClusterer({
+      map: this.map.googleMap!,
+      markers: this.createMarkers(this.locations),
+    });
+  }
+
+  private addInfoWindowCloseListener() {
+    google.maps.event.addListener(this.infoWindow, 'closeclick', () =>
+      this.closeInfo()
+    );
+  }
+
+  private createMarkers(value: PointLocation[]): google.maps.Marker[] {
+    return value.map((info) => {
+      const [lat, lng] = info.coordinates;
+      const position = { lat: lat!, lng: lng! };
+      const marker = new google.maps.Marker({ position });
+
+      google.maps.event.addListener(marker, 'click', () =>
+        this.openInfo(marker, info)
+      );
+
+      return marker;
+    });
   }
 }
