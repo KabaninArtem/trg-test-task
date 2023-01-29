@@ -1,0 +1,7 @@
+.active-link {
+  background-color: red;
+}
+
+a:not(:last-child) {
+  margin-right: 0.5em;
+}
