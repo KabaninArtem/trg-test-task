@@ -1,4 +1,4 @@
-export type Coordinates = [number, number];
+export type Coordinates = [number, number] | [];
 
 export interface PointLocation {
   coordinates: Coordinates;

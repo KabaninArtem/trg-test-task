@@ -34,7 +34,11 @@ import { MatInputModule } from '@angular/material/input';
 })
 export class LocationsTableComponent implements AfterViewInit {
   @Input() set locations(value: PointLocation[]) {
-    this.dataSource = new MatTableDataSource<PointLocation>(value);
+    if (this.dataSource) {
+      this.dataSource.data = value;
+    } else {
+      this.dataSource = new MatTableDataSource<PointLocation>(value);
+    }
   }
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
@@ -49,8 +53,7 @@ export class LocationsTableComponent implements AfterViewInit {
   dataSource: MatTableDataSource<PointLocation>;
 
   ngAfterViewInit(): void {
-    this.initPaginator();
-    this.initSorter();
+    this.initTableActions();
   }
 
   applyFilter(event: Event): void {
@@ -60,6 +63,11 @@ export class LocationsTableComponent implements AfterViewInit {
     if (this.dataSource.paginator) {
       this.dataSource.paginator.firstPage();
     }
+  }
+
+  private initTableActions(): void {
+    this.initPaginator();
+    this.initSorter();
   }
 
   private initPaginator(): void {

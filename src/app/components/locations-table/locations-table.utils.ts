@@ -7,8 +7,8 @@ export enum LocationTableColumns {
 }
 
 const sorterKeys: Record<string, (value: PointLocation) => string | number> = {
-  latitude: ({ coordinates: [lat] }: PointLocation) => lat,
-  longitude: ({ coordinates: [_, lng] }: PointLocation) => lng,
+  latitude: ({ coordinates: [lat] }: PointLocation) => lat!,
+  longitude: ({ coordinates: [_, lng] }: PointLocation) => lng!,
   name: ({ name }: PointLocation) => name,
 };
 

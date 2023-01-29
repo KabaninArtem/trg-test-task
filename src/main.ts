@@ -1,3 +1,4 @@
+import { MAT_DIALOG_DEFAULT_OPTIONS } from '@angular/material/dialog';
 import { bootstrapApplication } from '@angular/platform-browser';
 import { provideAnimations } from '@angular/platform-browser/animations';
 import { provideRouter, RouterModule, Routes } from '@angular/router';
@@ -34,6 +35,7 @@ const routes: Routes = [
 bootstrapApplication(AppComponent, {
   providers: [
     { provide: ApiService, useClass: ApiService },
+    { provide: MAT_DIALOG_DEFAULT_OPTIONS, useValue: { hasBackdrop: false } },
     provideRouter(routes),
     provideAnimations(),
   ],

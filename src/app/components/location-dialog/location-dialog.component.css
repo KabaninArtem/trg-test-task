@@ -1,0 +1,15 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  padding: 1.5em;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+}
+
+.actions {
+  display: flex;
+  justify-content: space-between;
+}

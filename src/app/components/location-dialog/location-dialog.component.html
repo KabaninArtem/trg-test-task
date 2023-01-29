@@ -1,0 +1,36 @@
+<form *ngIf="form" [formGroup]="form">
+  <mat-form-field>
+    <mat-label>Name</mat-label>
+    <input matInput formControlName="name" cdkFocusInitial />
+    <mat-error *ngIf="hasRequiredError('name')">
+      Name is <strong>required</strong>
+    </mat-error>
+  </mat-form-field>
+
+  <mat-form-field>
+    <mat-label>Latitude</mat-label>
+    <input matInput formControlName="lat" type="number" />
+    <mat-error *ngIf="hasRequiredError('lat')">
+      Latitude is <strong>required</strong>
+    </mat-error>
+    <mat-error *ngIf="hasCoordsError('lat')">
+      Please enter a valid <strong>Latitude</strong>
+    </mat-error>
+  </mat-form-field>
+
+  <mat-form-field>
+    <mat-label>Longitude</mat-label>
+    <input matInput formControlName="lng" type="number" />
+    <mat-error *ngIf="hasRequiredError('lng')">
+      Name is <strong>required</strong>
+    </mat-error>
+    <mat-error *ngIf="hasCoordsError('lng')">
+      Please enter a valid <strong>Longitude</strong>
+    </mat-error>
+  </mat-form-field>
+</form>
+
+<div mat-dialog-actions class="actions">
+  <button mat-button (click)="onCancel()">Cancel</button>
+  <button mat-button (click)="onSubmit()">Submit</button>
+</div>
