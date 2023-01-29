@@ -1,15 +1,20 @@
 import {
   AfterViewInit,
-  ChangeDetectionStrategy,
+  ChangeDetectorRef,
   Component,
   EventEmitter,
+  HostListener,
+  Inject,
   Input,
   Output,
-  TrackByFunction,
   ViewChild,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { MatTableDataSource, MatTableModule } from '@angular/material/table';
+import {
+  MatTable,
+  MatTableDataSource,
+  MatTableModule,
+} from '@angular/material/table';
 import { PointLocation } from 'src/app/models/api.models';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { MatSort, MatSortModule } from '@angular/material/sort';
@@ -20,6 +25,7 @@ import {
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
+import { WindowToken } from 'src/app/providers/window.provider';
 
 @Component({
   selector: 'app-locations-table',
@@ -33,7 +39,7 @@ import { MatButtonModule } from '@angular/material/button';
     MatFormFieldModule,
     MatInputModule,
   ],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  // changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './locations-table.component.html',
   styleUrls: ['./locations-table.component.css'],
 })
@@ -48,6 +54,7 @@ export class LocationsTableComponent implements AfterViewInit {
 
   @Output() editClicked: EventEmitter<PointLocation> = new EventEmitter();
 
+  @ViewChild(MatTable) table: MatTable<PointLocation>;
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
 
@@ -58,9 +65,24 @@ export class LocationsTableComponent implements AfterViewInit {
     LocationTableColumns.ACTIONS,
   ];
 
-  readonly pageSizeOptions: readonly number[] = [5, 10, 15];
+  readonly pageSizeOptions: readonly number[] = [5, 10];
 
   dataSource: MatTableDataSource<PointLocation>;
+  pageSize: number = 10;
+
+  constructor(
+    @Inject(WindowToken) private window: Window,
+    private cdr: ChangeDetectorRef
+  ) {}
+
+  ngOnInit(): void {
+    this.setPageSize();
+  }
+
+  @HostListener('window:resize', ['$event'])
+  onWindowResize(): void {
+    this.setPageSize();
+  }
 
   ngAfterViewInit(): void {
     this.initTableActions();
@@ -95,5 +117,9 @@ export class LocationsTableComponent implements AfterViewInit {
   private initSorter(): void {
     this.dataSource.sortingDataAccessor = locationSortingDataAccessor;
     this.dataSource.sort = this.sort;
+  }
+
+  private setPageSize(): void {
+    this.pageSize = this.window.innerHeight < 750 ? 5 : 10;
   }
 }

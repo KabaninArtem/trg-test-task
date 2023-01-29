@@ -11,6 +11,8 @@ import { MainPageService } from './main-page.service';
 import { MapComponent } from 'src/app/components/map/map.component';
 import { MatSidenavModule, MatDrawer } from '@angular/material/sidenav';
 import { LocationDetailsComponent } from 'src/app/components/location-details/location-details.component';
+import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
 
 @Component({
   selector: 'app-main-page',
@@ -22,6 +24,8 @@ import { LocationDetailsComponent } from 'src/app/components/location-details/lo
   imports: [
     CommonModule,
     MatSidenavModule,
+    MatIconModule,
+    MatButtonModule,
     LocationDetailsComponent,
     MapComponent,
   ],
@@ -44,9 +48,13 @@ export class MainPageComponent {
     if (value) {
       this.drawer.open();
     } else {
-      this.drawer.close();
+      this.closeDetails();
     }
 
     this.cdr.detectChanges();
+  }
+
+  closeDetails(): void {
+    this.drawer.close();
   }
 }

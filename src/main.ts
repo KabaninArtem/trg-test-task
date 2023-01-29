@@ -9,6 +9,7 @@ import {
 } from './app/configs/map-configs/map.providers';
 import { AppRoutes } from './app/models/app.routes';
 import { MAP_API_KEY, MAP_API_URL } from './app/providers/map.providers';
+import { windowProvider, WindowToken } from './app/providers/window.provider';
 import { ApiService } from './app/services/api.service';
 import { GoogleApiService } from './app/services/google-api.service';
 
@@ -43,6 +44,7 @@ bootstrapApplication(AppComponent, {
     { provide: MAP_API_URL, useValue: GOOGLE_MAP_API_URL },
     { provide: MAP_API_KEY, useValue: GOOGLE_MAP_API_KEY },
     { provide: MAT_DIALOG_DEFAULT_OPTIONS, useValue: { hasBackdrop: false } },
+    { provide: WindowToken, useFactory: windowProvider },
     { provide: ApiService, useClass: ApiService },
     { provide: GoogleApiService, useClass: GoogleApiService },
     provideRouter(routes),
